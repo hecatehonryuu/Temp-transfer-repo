@@ -15,6 +15,10 @@ output_path = "hdfs://{}:9000/assignment2/output/question1".format(hdfs_nn)
 df = spark.read.csv(input_path, header=True, inferSchema=True)
 
 df = df.filter((df['Number of Reviews'] != 'null') & (df['Rating'] != 'null'))
+
+df = df.withColumn('Number of Reviews', df['Number of Reviews'].cast('float'))
+df = df.withColumn('Rating', df['Rating'].cast('float'))
+
 df = df.filter((df['Number of Reviews'] > 0) & (df['Rating'] >= 1.0))
 
 df.write.csv(output_path)
