@@ -14,7 +14,7 @@ output_path = "hdfs://{}:9000/assignment2/output/question4".format(hdfs_nn)
 
 df = spark.read.csv(input_path, header=True, inferSchema=True)
 
-df1 = df.groupBy('City', 'Cuisine').count()
+df1 = df.groupBy('City', 'Cuisine Style').count()
 
 df1.write.csv(output_path)
 
