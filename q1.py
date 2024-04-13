@@ -19,10 +19,3 @@ df = df.filter((df['Number of Reviews'].isNotNull()) & (df['Rating'].isNotNull()
 df = df.filter((df['Number of Reviews'] > 0) & (df['Rating'] >= 1.0))
 
 df.write.csv(output_path)
-
-# sc = spark.sparkContext
-# text_file = sc.textFile(input_path)
-
-# filtered_text_file = text_file.filter(lambda row: row.split(',')[7] != 'null' and row.split(',')[5] != 'null' float(row.split(',')[5]) >= 1.0)
-
-# filtered_text_file.saveAsTextFile(output_path)
