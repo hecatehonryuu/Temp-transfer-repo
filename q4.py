@@ -17,17 +17,3 @@ df = spark.read.csv(input_path, header=True, inferSchema=True)
 df1 = df.groupBy('City', 'Cuisine Style').count()
 
 df1.write.csv(output_path)
-
-# sc = spark.sparkContext
-# text_file = sc.textFile(input_path)
-
-# # Aggregate by count using column 2 and 3 as key
-# city_cuisine = text_file.map(lambda line: line.split(",")).map(lambda x: (x[2], x[3], 1))
-
-# count = city_cuisine.reduceByKey(lambda x, y: x + y).map(lambda x: (x[0][0], x[0][1], x[1]))
-
-# headers = sc.parallelize([("City", "Cuisine", "count")])
-# result = headers.union(count)
-
-# # Save the result to the output path
-# result.saveAsTextFile(output_path)
