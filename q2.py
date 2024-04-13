@@ -15,7 +15,7 @@ output_path = "hdfs://{}:9000/assignment2/output/question2".format(hdfs_nn)
 
 df = spark.read.csv(input_path, header=True, inferSchema=True)
 
-df = df.filter((df['Price Range'].isNotNull()))
+df = df.filter((df['Price Range'].isNotNull()) & (df['Rating'].isNotNull()))
 
 # Convert DataFrame to RDD
 rdd = df.rdd
