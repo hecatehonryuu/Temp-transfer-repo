@@ -19,11 +19,16 @@ df = spark.read.csv(input_path, header=True, inferSchema=True)
 
 df.write.csv(output_path1)
 
-df = df.filter((df['Number of Reviews'] != 'null') & (df['Number of Reviews'] > 0))
+df = df.filter((df['Number of Reviews'] != 'null') & (df['Rating'] != 'null'))
 
 df.write.csv(output_path2)
 
-df = df.filter((df['Rating'] != 'null') & (df['Rating'] >= 1.0))
+df = df.withColumn('Number of Reviews', df['Number of Reviews'].cast('float'))
+df = df.withColumn('Rating', df['Rating'].cast('float'))
+
+df.write.csv(output_path3)
+
+df = df.filter((df['Number of Reviews'] > 0) & (df['Rating'] >= 1.0))
 
 df.write.csv(output_path)
 
