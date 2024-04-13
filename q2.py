@@ -15,6 +15,8 @@ output_path = "hdfs://{}:9000/assignment2/output/question2".format(hdfs_nn)
 
 df = spark.read.csv(input_path, header=True, inferSchema=True)
 
+df = df.filter((df['Price Range'].isNotNull()))
+
 # Convert DataFrame to RDD
 rdd = df.rdd
 
@@ -40,7 +42,7 @@ df_filtered = df.join(result_df, ['City', 'Price Range', 'Rating'])
 # Write the filtered DataFrame to a CSV file
 df_filtered.write.csv(output_path)
 
-# df = df.filter((df['Price Range'].isNotNull()))
+
 
 # df1 = df.groupBy('City', 'Price Range').agg({'Rating': 'max'})
 # df2 = df.groupBy('City', 'Price Range').agg({'Rating': 'min'})
