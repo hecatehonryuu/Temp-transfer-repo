@@ -11,17 +11,10 @@ spark = SparkSession.builder.appName("Assigment 2 Question 1").getOrCreate()
 
 input_path = "hdfs://{}:9000/assignment2/part1/input/TA_restaurants_curated_cleaned.csv".format(hdfs_nn)
 output_path = "hdfs://{}:9000/assignment2/output/question1".format(hdfs_nn)
-output_path1 = "hdfs://{}:9000/assignment2/output/question1/1".format(hdfs_nn)
-output_path2 = "hdfs://{}:9000/assignment2/output/question1/2".format(hdfs_nn)
-output_path3 = "hdfs://{}:9000/assignment2/output/question1/3".format(hdfs_nn)
 
 df = spark.read.csv(input_path, header=True, inferSchema=True)
 
-df.write.csv(output_path1)
-
 df = df.filter((df['Number of Reviews'].isNotNull()) & (df['Rating'].isNotNull()))
-
-df.write.csv(output_path2)
 
 df = df.filter((df['Number of Reviews'] > 0) & (df['Rating'] >= 1.0))
 
