@@ -20,13 +20,16 @@ text_file = sc.textFile(input_path)
 text_file = text_file.filter(lambda row: row.split(',')[6] != 'null')
 
 # Group by city and price range
-grouped_values = text_file.map(lambda row: (row.split(',')[2], row.split(',')[6], float(row.split(',')[5]))).groupBy(lambda x: (x[0], x[1]))
+grouped_values = text_file.map(lambda row: (row.split(',')[2], row.split(',')[6], float(row.split(',')[5])))
 
 #Find max and min values
-max_values = grouped_values.reduceByKey(lambda x, y: x if x[1][2] > y[1][2] else y)
-min_values = grouped_values.reduceByKey(lambda x, y: x if x[1][2] < y[1][2] else y)
+max_values = grouped_values.reduceByKey(max)
+min_values = grouped_values.reduceByKey(min)
+
+max_values_set = set(max_values.collect())
+min_values_set = set(min_values.collect())
 
 #filter to leave only min/max values
-filtered_text_file = text_file.filter(lambda row: (row.split(',')[2], row.split(',')[6]) in min_values or (row.split(',')[2], row.split(',')[6]) in max_values)
+filtered_text_file = text_file.filter(lambda row: ((row.split(',')[2], row.split(',')[6]), float(row.split(',')[5])) in max_values_set or ((row.split(',')[2], row.split(',')[6]), float(row.split(',')[5])) in min_values_set)
 
 filtered_text_file.saveAsTextFile(output_path)

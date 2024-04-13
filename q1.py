@@ -15,6 +15,6 @@ output_path = "hdfs://{}:9000/assignment2/output/question1".format(hdfs_nn)
 sc = spark.sparkContext
 text_file = sc.textFile(input_path)
 
-filtered_text_file = text_file.filter(lambda row: row.split(',')[7] != 'null' and float(row.split(',')[5]) >= 1.0)
+filtered_text_file = text_file.filter(lambda row: row.split(',')[7] != 'null' and row.split(',')[5] != 'null' and float(row.split(',')[5]) >= 1.0)
 
 filtered_text_file.saveAsTextFile(output_path)

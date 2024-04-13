@@ -22,7 +22,8 @@ average_rating = city_rating.aggregateByKey((0, 0), lambda acc, value: (acc[0] +
 
 sorted_rating = average_rating.sortBy(lambda x: -x[1])
 
-filtered_rating = sorted_rating.zipWithIndex().filter(lambda x: x[1] < 3 or x[1] >= sorted_rating.count() - 3).map(lambda x: (x[0][0], x[0][1], "Top" if x[1] < 3 else "Bottom"))
+sorted_rating_count = sorted_rating.count()
+filtered_rating = sorted_rating.zipWithIndex().filter(lambda x: x[1] < 3 or x[1] >= sorted_rating_count - 3).map(lambda x: (x[0][0], x[0][1], "Top" if x[1] < 3 else "Bottom"))
 
 headers = sc.parallelize([("City", "AverageRating", "RatingGroup")])
 result = headers.union(filtered_rating)
