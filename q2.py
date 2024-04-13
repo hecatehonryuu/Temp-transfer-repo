@@ -12,17 +12,25 @@ spark = SparkSession.builder.appName("Assigment 2 Question 2").getOrCreate()
 
 input_path = "hdfs://{}:9000/assignment2/part1/input/TA_restaurants_curated_cleaned.csv".format(hdfs_nn)
 output_path = "hdfs://{}:9000/assignment2/output/question2".format(hdfs_nn)
+output_path1 = "hdfs://{}:9000/assignment2/output/question2/1".format(hdfs_nn)
+output_path2 = "hdfs://{}:9000/assignment2/output/question2/2".format(hdfs_nn)
+output_path3 = "hdfs://{}:9000/assignment2/output/question2/3".format(hdfs_nn)
+output_path4 = "hdfs://{}:9000/assignment2/output/question2/4".format(hdfs_nn)
 
 df = spark.read.csv(input_path, header=True, inferSchema=True)
 
 df = df.filter((df['Price Range'].isNotNull()))
 
+df.write.csv(output_path1)
+
 df1 = df.groupBy('City', 'Price Range').agg({'Rating': 'max'})
+df.write.csv(output_path2)
 df2 = df.groupBy('City', 'Price Range').agg({'Rating': 'min'})
+df.write.csv(output_path3)
 
-df = df.filter(df['City'].isin(df1.select('City')) & df['Price Range'].isin(df1.select('Price Range')) | df['City'].isin(df2.select('City')) & df['Price Range'].isin(df2.select('Price Range')))
+df = df.filter(df['City'].isin((df1.select('City')) & df['Price Range'].isin(df1.select('Price Range'))) | (df['City'].isin(df2.select('City')) & df['Price Range'].isin(df2.select('Price Range'))))
 
-df.write.csv(output_path)
+df.write.csv(output_path4)
 
 # sc = spark.sparkContext
 # text_file = sc.textFile(input_path)
