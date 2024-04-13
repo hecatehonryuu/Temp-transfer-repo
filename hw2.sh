@@ -34,8 +34,8 @@ spark-submit q1.py $hdfs_namenode
 # hdfs dfs -put ./data/tmdb_5000_credits.parquet /assignment2/part2/input/tmdb_5000_credits.parquet
 
 
-echo "question 5"
-hdfs dfs -rm -r /assignment2/output/question5
-spark-submit q5.py $hdfs_namenode 
+# echo "question 5"
+# hdfs dfs -rm -r /assignment2/output/question5
+# spark-submit q5.py $hdfs_namenode 
 
 
