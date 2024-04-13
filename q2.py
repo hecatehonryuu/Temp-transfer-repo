@@ -15,34 +15,36 @@ output_path = "hdfs://{}:9000/assignment2/output/question2".format(hdfs_nn)
 
 df = spark.read.csv(input_path, header=True, inferSchema=True)
 
-df = df.filter((df['Price Range'].isNotNull()))
+# Convert DataFrame to RDD
+rdd = df.rdd
 
-df1 = df.groupBy('City', 'Price Range').agg({'Rating': 'max'})
-df2 = df.groupBy('City', 'Price Range').agg({'Rating': 'min'})
+# Map each row to a key-value pair, where the key is ('City', 'Price Range') and the value is the entire row
+rdd_keyed = rdd.map(lambda row: ((row['City'], row['Price Range']), row))
 
-df3 = df1.union(df2)
+# Reduce by key to find the row with the max and min 'Rating' for each key
+max_rdd = rdd_keyed.reduceByKey(lambda a, b: a if a['Rating'] > b['Rating'] else b)
+min_rdd = rdd_keyed.reduceByKey(lambda a, b: a if a['Rating'] < b['Rating'] else b)
 
-df_filtered = df.join(df3, on=['City', 'Price Range'], how='inner')
+# Union max_rdd and min_rdd
+result_rdd = max_rdd.union(min_rdd)
 
-df3.write.csv(output_path)
+# Remove the keys to get back the original rows
+result_rdd = result_rdd.map(lambda x: x[1])
 
-# sc = spark.sparkContext
-# text_file = sc.textFile(input_path)
+# Convert the result RDD back to a DataFrame
+result_df = result_rdd.toDF()
 
-# #Filter out null price range
-# text_file = text_file.filter(lambda row: row.split(',')[6] != 'null')
+# Join the original DataFrame with the result DataFrame
+df_filtered = df.join(result_df, ['City', 'Price Range', 'Rating'])
 
-# # Group by city and price range
-# grouped_values = text_file.map(lambda row: (row.split(',')[2], row.split(',')[6], float(row.split(',')[5])))
+# Write the filtered DataFrame to a CSV file
+df_filtered.write.csv(output_path)
 
-# #Find max and min values
-# max_values = grouped_values.reduceByKey(max)
-# min_values = grouped_values.reduceByKey(min)
+# df = df.filter((df['Price Range'].isNotNull()))
 
-# max_values_set = set(max_values.collect())
-# min_values_set = set(min_values.collect())
+# df1 = df.groupBy('City', 'Price Range').agg({'Rating': 'max'})
+# df2 = df.groupBy('City', 'Price Range').agg({'Rating': 'min'})
 
-# #filter to leave only min/max values
-# filtered_text_file = text_file.filter(lambda row: ((row.split(',')[2], row.split(',')[6]), float(row.split(',')[5])) in max_values_set or ((row.split(',')[2], row.split(',')[6]), float(row.split(',')[5])) in min_values_set)
+# df3 = df1.union(df2)
 
-# filtered_text_file.saveAsTextFile(output_path)
+# df3.write.csv(output_path)
