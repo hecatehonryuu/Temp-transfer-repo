@@ -22,6 +22,8 @@ df2 = df.groupBy('City', 'Price Range').agg({'Rating': 'min'})
 
 df3 = df1.union(df2)
 
+df_filtered = df.join(df3, on=['City', 'Price Range'], how='inner')
+
 df3.write.csv(output_path)
 
 # sc = spark.sparkContext
