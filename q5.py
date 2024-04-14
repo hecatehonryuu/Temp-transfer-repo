@@ -24,7 +24,7 @@ df = df.withColumn("cast", explode(from_json(col("cast"), json_schema)))
 df = df.select("movie_id", "cast.cast_id", "cast.character", "cast.credit_id", "cast.gender", "cast.id", "cast.name", "cast.order")
 
 df.write.csv(output_path1)
-df = df.select("movie_id", "cast.gender", "cast.name")
+df = df.select("movie_id", "gender", "name")
 
 df.write.csv(output_path2)
 
