@@ -28,10 +28,10 @@ hdfs_namenode="localhost"
 # hdfs dfs -rm -r /assignment2/output/question4
 # spark-submit q4.py $hdfs_namenode 
 
-echo "part2"
-hdfs dfs -rm -r /assignment2/part2/
-hdfs dfs -mkdir -p /assignment2/part2/input/
-hdfs dfs -put ./data/tmdb_5000_credits.parquet /assignment2/part2/input/tmdb_5000_credits.parquet
+# echo "part2"
+# hdfs dfs -rm -r /assignment2/part2/
+# hdfs dfs -mkdir -p /assignment2/part2/input/
+# hdfs dfs -put ./data/tmdb_5000_credits.parquet /assignment2/part2/input/tmdb_5000_credits.parquet
 
 
 echo "question 5"
