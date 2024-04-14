@@ -30,7 +30,7 @@ df2 = df.join(df1, "movie_id").filter((df["actor1"] != df1["actor2"]) & (df["act
 
 df3 = df2.groupBy("actor1", "actor2").count().filter(col("count") > 1)
 
-df4 = df2.join(df3, (df2["actor1"] == df3["actor1"]) & (df2["actor2"] == df3["actor2"]), "inner")
+df4 = df2.join(df3, ["actor1", 'actor2'])
 
 df4.write.csv(output_path)
 
