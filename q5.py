@@ -22,12 +22,13 @@ df = df.select("movie_id", "title", "cast")
 json_schema = "array<struct<cast_id:int, character:string, credit_id:string, gender:int, id:int, name:string, order:int>>"
 df = df.withColumn("cast", explode(from_json(df["cast"], json_schema)))
 
-df = df.select("movie_id", "title", "cast.name")
+df = df.select("movie_id", "title", df["cast.name"].alias("actor1"))
+df.write.csv(output_path1)
 
-df1 = df.select("movie_id", "name")
-df1.write.csv(output_path1)
+df1 = df.select("movie_id", df["actor1"].alias("actor2"))
+df1.write.csv(output_path2)
 
-df2 = df.join(df1, "movie_id").filter(df["name"] != df1["name"])
-df2.write.csv(output_path2)
+df2 = df.join(df1, "movie_id").filter(df["actor1"] != df1["actor2"])
+df2.write.csv(output_path3)
 
 spark.stop()
