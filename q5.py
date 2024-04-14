@@ -32,6 +32,8 @@ df3 = df2.groupBy("actor1", "actor2").count().filter(col("count") > 1)
 
 df4 = df3.join(df2, ["actor1", 'actor2'])
 
-df4.write.csv(output_path)
+df5 = df4.select("movie_id", "title", "actor1", "actor2")
+
+df5.write.csv(output_path)
 
 spark.stop()
