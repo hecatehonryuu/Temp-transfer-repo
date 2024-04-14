@@ -17,15 +17,15 @@ output_path3 = "hdfs://{}:9000/assignment2/output/question5/3".format(hdfs_nn)
 
 df = spark.read.option("header", "true").parquet(input_path)
 
-df = df.select("movie_id", "cast")
+df = df.select("movie_id", "title", "cast")
 
 json_schema = "array<struct<cast_id:int, character:string, credit_id:string, gender:int, id:int, name:string, order:int>>"
 df = df.withColumn("cast", explode(from_json(col("cast"), json_schema)))
-df = df.select("movie_id", "cast.cast_id", "cast.character", "cast.credit_id", "cast.gender", "cast.id", "cast.name", "cast.order")
 
+df = df.select("movie_id", "title", "cast.name")
 df.write.csv(output_path1)
-df = df.select("movie_id", "gender", "name")
 
+df1 = df.select("movie_id", "name")
 df.write.csv(output_path2)
 
 spark.stop()
