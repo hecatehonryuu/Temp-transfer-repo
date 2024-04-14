@@ -28,6 +28,8 @@ df1 = df.select("movie_id", df["actor1"].alias("actor2"))
 
 df2 = df.join(df1, "movie_id").filter((df["actor1"] != df1["actor2"]) & (df["actor1"] < df1["actor2"]))
 
-df2.write.csv(output_path)
+df3 = df2.groupBy("actor1", "actor2").count().filter(col("count") > 1)
+
+df3.write.csv(output_path)
 
 spark.stop()
