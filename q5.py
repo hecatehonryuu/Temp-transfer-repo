@@ -20,17 +20,14 @@ df = spark.read.option("header", "true").parquet(input_path)
 df = df.select("movie_id", "title", "cast")
 
 json_schema = "array<struct<cast_id:int, character:string, credit_id:string, gender:int, id:int, name:string, order:int>>"
-df = df.withColumn("cast", explode(from_json(col("cast"), json_schema)))
+df = df.withColumn("cast", explode(from_json(df["cast"], json_schema)))
 
 df = df.select("movie_id", "title", "cast.name")
 
 df1 = df.select("movie_id", "name")
 df1.write.csv(output_path1)
 
-df2 = df.join(df1, "movie_id")
+df2 = df.join(df1, "movie_id").filter(df["name"] != df1["name"])
 df2.write.csv(output_path2)
-
-df2 = df2.filter(df["name"] != df1["name"])
-df2.write.csv(output_path31)
 
 spark.stop()
