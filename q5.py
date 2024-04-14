@@ -21,9 +21,11 @@ df = df.select("movie_id", "cast")
 
 json_schema = "array<struct<cast_id:int, character:string, credit_id:string, gender:int, id:int, name:string, order:int>>"
 df = df.withColumn("cast", explode(from_json(col("cast"), json_schema)))
+df = df.select("movie_id", "cast.cast_id", "cast.character", "cast.credit_id", "cast.gender", "cast.id", "cast.name", "cast.order")
 
-df.write.csv(output_path)
+df.write.csv(output_path1)
+df = df.select("movie_id", "cast.gender", "cast.name")
 
-df.printSchema()
+df.write.csv(output_path2)
 
 spark.stop()
