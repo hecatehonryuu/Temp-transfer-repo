@@ -24,4 +24,6 @@ df = df.withColumn("cast", explode(from_json(col("cast"), json_schema)))
 
 df.write.csv(output_path)
 
+df.printSchema()
+
 spark.stop()
